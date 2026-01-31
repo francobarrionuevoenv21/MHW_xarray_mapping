@@ -1,4 +1,4 @@
-from preliminar.stack_ranges import stack_ranges
+from mhw_aux import stack_ranges
 
 def climg_mean(ds_sst, MHW_date, climY_start, climY_end, MHW_window = 5):
     
