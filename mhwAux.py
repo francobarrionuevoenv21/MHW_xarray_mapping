@@ -105,7 +105,7 @@ def stack_ranges(ds_sst, MHW_date, climY_start, climY_end, MHW_window = 5):
     return stacked_da
 
 
-def open_sst(file_path):
+def openSST(file_path):
     '''
     Open SST dataset from a NetCDF file.
 
