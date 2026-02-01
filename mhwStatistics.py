@@ -1,16 +1,16 @@
-from mhwAux import stack_ranges
+from mhwAux import stackRanges
 
-def climg_mean(ds_sst, MHW_date, climY_start, climY_end, MHW_window = 5):
+def climgMean(ds_sst, MHW_date, climY_start, climY_end, MHW_window):
     
-    return stack_ranges(ds_sst, MHW_date, climY_start, climY_end, MHW_window).mean()
+    return stackRanges(ds_sst, MHW_date, climY_start, climY_end, MHW_window).mean(dim="time")
 
-def climg_thresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window = 5, thresh = 90):
+def climgThresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh):
     
-    return stack_ranges(ds_sst, MHW_date, climY_start, climY_end, MHW_window).quantile(thresh/100, dim="time")
+    return stackRanges(ds_sst, MHW_date, climY_start, climY_end, MHW_window).quantile(thresh, dim="time")
 
-def climg_diff(ds_sst, MHW_date, climY_start, climY_end, MHW_window = 5, thresh = 90):
+def climgDiff(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh):
 
-    mean = climg_mean(ds_sst, MHW_date, climY_start, climY_end, MHW_window = 5)
-    thresh = climg_thresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh)
+    mean = climgMean(ds_sst, MHW_date, climY_start, climY_end, MHW_window)
+    thresh = climgThresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh)
 
-    return mean - thresh
+    return thresh - mean

@@ -6,7 +6,7 @@ import xarray as xr
 
 # FUNCTIONS
 
-def get_datesWindow(date_str, window):
+def getDatesWindow(date_str, window):
     """
     Compute a symmetric date window around a reference date.
 
@@ -28,7 +28,7 @@ def get_datesWindow(date_str, window):
     return d_minus, d_plus
 
 # Function to get dates for climatology computing 
-def get_datesClimg(date_str, window, climY_start, climY_end):
+def getDatesClimg(date_str, window, climY_start, climY_end):
     '''
     Docstring for get_datesClimg
     
@@ -39,7 +39,7 @@ def get_datesClimg(date_str, window, climY_start, climY_end):
     '''
 
     # Get before and after MHW dates & Save them
-    dateBef_str, dateAft_str = get_datesWindow(date_str, window)
+    dateBef_str, dateAft_str = getDatesWindow(date_str, window)
 
     # Get year dates
     dateBefY = int(dateBef_str[:4]) # int
@@ -63,9 +63,45 @@ def get_datesClimg(date_str, window, climY_start, climY_end):
         else:
             listTup_dates.append((str(y)+mmdd_y1, str(y)+mmdd_y2))
 
+    print( listTup_dates )
+
     return listTup_dates
 
-def stack_ranges(ds_sst, MHW_date, climY_start, climY_end, MHW_window = 5):
+def openSST(file_path):
+    '''
+    Open SST dataset from a NetCDF file.
+
+    Parameters
+    ----------
+    file_path : str
+        Path to the NetCDF file containing SST data.
+
+    Returns
+    -------
+    xarray.Dataset
+        Dataset containing sea surface temperature data.
+    '''
+
+    try:
+        ds_sst = xr.open_dataset(file_path)
+    except OSError as e:
+        raise OSError(f"Could not open dataset: {file_path}") from e
+
+    if "sst" not in ds_sst.data_vars:
+        raise KeyError(
+            "Variable 'sst' not found in dataset.\n"
+            "Ensure the dataset uses 'sst' as the sea surface temperature variable."
+        )
+
+    if "time" not in ds_sst.dims:
+        raise ValueError(
+            "Dataset does not contain a 'time' dimension.\n"
+            "Ensure the dataset includes temporal information."
+        )
+
+    return ds_sst.sst
+
+def stackRanges(ds_sst, MHW_date, climY_start, climY_end, MHW_window):
     '''
     Stack date ranges from climatology period into a single xarray DataArray.
 
@@ -89,14 +125,14 @@ def stack_ranges(ds_sst, MHW_date, climY_start, climY_end, MHW_window = 5):
     '''
     
     # Get list of date tuples for climatology period
-    listTup_dates = get_datesClimg(MHW_date, MHW_window, climY_start, climY_end)
+    listTup_dates = getDatesClimg(MHW_date, MHW_window, climY_start, climY_end)
     
     # Initialize an empty list to hold DataArrays
     list_da = []
     
     # Iterate over each date tuple and extract corresponding data
     for date_start, date_end in listTup_dates:
-        da_range = ds_sst.sel(time=slice(date_start, date_end)).sst # INCLUDE VARIABLE CHECK
+        da_range = ds_sst.sel(time=slice(date_start, date_end))
         list_da.append(da_range)
     
     # Concatenate all DataArrays along the time dimension
@@ -104,34 +140,3 @@ def stack_ranges(ds_sst, MHW_date, climY_start, climY_end, MHW_window = 5):
     
     return stacked_da
 
-
-def openSST(file_path):
-    '''
-    Open SST dataset from a NetCDF file.
-
-    Parameters
-    ----------
-    file_path : str
-        Path to the NetCDF file containing SST data.
-
-    Returns
-    -------
-    xarray.Dataset
-        Dataset containing sea surface temperature data.
-    '''
-
-    try:
-        ds_sst = xr.open_dataset(file_path)
-    
-    if "sst" not in ds_oisst:
-        raise KeyError(
-            f"Variable 'sst' not found in dataset. \n"
-            "Update to use 'sst' as variable name for sea surface temperature data."
-        )
-    elif "time" not in ds_oisst:
-        raise KeyError(
-            f"Variable 'time' not found in dataset. \n"
-            "Ensure the dataset contains a 'time' dimension."
-            )
-
-    return ds_sst

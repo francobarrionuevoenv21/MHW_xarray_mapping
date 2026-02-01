@@ -43,7 +43,7 @@ def mapIntensityCont(sst_path, MHW_date, climY_start = CLIMG_YSTART, climY_end =
 
     return intCont_map
 
-def mapIntensityCat(sst_path, MHW_date, climY_start, climY_end, MHW_window = 5, percentile = 90, mask = True):
+def mapIntensityCat(sst_path, MHW_date, climY_start = CLIMG_YSTART, climY_end = CLIMG_YEND, MHW_window = WINDOW, percentile = PERCENTILE/100, mask = MASK):
 
     """
     Map continuous intensity anomaly for a given MHW event.

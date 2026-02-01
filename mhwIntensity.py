@@ -1,7 +1,9 @@
-from mhwStatistics import climg_thresh
+import xarray as xr
+import numpy as np
+from mhwStatistics import climgThresh, climgDiff
 
 
-def intensityCont(ds_sst, MHW_date, climY_start, climY_end, MHW_window = 5, thresh = 90, mask = True):
+def intensityCont(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh, mask):
     """
     Compute the anomaly between MHW peak intensity and climatology threshold.
 
@@ -31,7 +33,7 @@ def intensityCont(ds_sst, MHW_date, climY_start, climY_end, MHW_window = 5, thre
     sst_MHWDate = ds_sst.sel(time = MHW_date)
 
     # Get sst threshold within the climatology period (predefinded: 90th percentile)
-    sst_thresh = climg_thresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh)
+    sst_thresh = climgThresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh)
 
     # Get continuous intensity anomaly at MHW date 
     intCont_MHWDate = sst_MHWDate - sst_thresh
@@ -70,19 +72,19 @@ def intensityCat(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh, m
     """
 
     # Get peak intensity MHW scene
-    sst_MHWDate = ds_sst.sel(time = MHW_date)
+    intCont_MHWDate = intensityCont(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh, mask)
 
     #
-    sst_climgDiff = climg_diff(ds_sst, MHW_date, climY_start, climY_end, MHW_window = 5, thresh = 90)
+    sst_climgDiff = climgDiff(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh)
 
-    ratio = sst_MHWDate / sst_climgDiff ## Set the ratio intensity/(thresh-clim)
+    ratio = intCont_MHWDate / sst_climgDiff ## Set the ratio intensity/(thresh-clim)
     
     intCat_MHWDate = xr.full_like(ratio, fill_value = np.nan) ## Initialize the categorical dataset with nan values
     
     ## fill with categorical data
-    intCat_MHWDate = xr.where(ratio >= 3, 4, intCat_MHWDate)
-    intCat_MHWDate = xr.where((ratio >= 2) & (ratio < 3), 3, intCat_MHWDate)
-    intCat_MHWDate = xr.where((ratio >= 1) & (ratio < 2), 2, intCat_MHWDate)
-    intCat_MHWDate = xr.where((ratio >= 0) & (ratio < 1), 1, intCat_MHWDate)
+    intCat_MHWDate = xr.where(ratio > 3, 4, intCat_MHWDate)
+    intCat_MHWDate = xr.where((ratio > 2) & (ratio <= 3), 3, intCat_MHWDate)
+    intCat_MHWDate = xr.where((ratio > 1) & (ratio <= 2), 2, intCat_MHWDate)
+    intCat_MHWDate = xr.where((ratio > 0) & (ratio <= 1), 1, intCat_MHWDate)
     
     return intCat_MHWDate
