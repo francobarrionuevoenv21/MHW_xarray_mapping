@@ -1,69 +1,78 @@
-# LIBRARIES
+# IMPORT LIBRARIES
 from datetime import datetime as dt
-from dateutil.relativedelta import relativedelta
 from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 import xarray as xr
 
-# FUNCTIONS
+# DEFINE FUNCTIONS
 
 def getDatesWindow(date_str, window):
+
     """
+
     Compute a symmetric date window around a reference date.
 
     Parameters
     ----------
-    date_str: str
-        MHW peak intensity date in "YYYY-MM-DD" format
-    window: int
-        Number of days to add/subtract from the MHW peak intensity date
+    NOTE: See parameters description in mhwMap.py module
 
     Returns
     -------
-    d_minus & d_plus : str
-        Date corresponding to (date_str -/+ window days), in "YYYY-MM-DD" format.
+    str
+        Start and end range dates.
+    
     """
+
     d = dt.strptime(date_str, "%Y-%m-%d")
     d_minus = (d - timedelta(days=window)).strftime("%Y-%m-%d")
     d_plus  = (d + timedelta(days=window)).strftime("%Y-%m-%d")
+
     return d_minus, d_plus
 
 # Function to get dates for climatology computing 
 def getDatesClimg(date_str, window, climY_start, climY_end):
-    '''
-    Docstring for get_datesClimg
-    
-    :param date_str: Description
-    :param window: Description
-    :param climY_start: Description
-    :param climY_end: Description
-    '''
 
-    # Get before and after MHW dates & Save them
+    """
+    
+    Get dates range within the MHW date +/- window for each year during the climatology
+    defined period 
+
+    Parameters
+    ----------
+    NOTE: See parameters description in mhwMap.py module
+
+    Returns
+    -------
+    list
+        List of tuples, with each tuple containing start and end date analysis period range 
+        for each year.
+    
+    """
+
+    # Get before and after MHW dates and save them
     dateBef_str, dateAft_str = getDatesWindow(date_str, window)
 
     # Get year dates
-    dateBefY = int(dateBef_str[:4]) # int
-    dateAftY = int(dateAft_str[:4]) # int
+    dateBefY = int(dateBef_str[:4])
+    dateAftY = int(dateAft_str[:4])
 
     # Get and define MM-DD dates
-    mmdd_y1 = dateBef_str[-6:] # str
-    mmdd_y2 = dateAft_str[-6:] # str
+    mmdd_y1 = dateBef_str[-6:]
+    mmdd_y2 = dateAft_str[-6:]
 
     # Define years range
     range_y1 = climY_start
     range_y2 = climY_end + 1 # Add 1 extra year due to range() settings
 
-    # Create list of tuples with dates +5 and -5 days during the base period
+    # Create an empty list
     listTup_dates = []
 
-    # Iterate and get tuples of dates in the climatology period
+    # Iterate and save tuples with dates +5 and -5 days during the climatology period
     for y in range(range_y1, range_y2):
         if dateBefY != dateAftY: 
             listTup_dates.append((str(y-1)+mmdd_y1, str(y)+mmdd_y2))
         else:
             listTup_dates.append((str(y)+mmdd_y1, str(y)+mmdd_y2))
-
-    print( listTup_dates )
 
     return listTup_dates
 
