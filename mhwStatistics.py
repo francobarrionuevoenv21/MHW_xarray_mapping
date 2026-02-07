@@ -2,11 +2,9 @@
 from mhwAux import stackRanges
 
 # DEFINE FUNCTIONS
-
 def climgMean(ds_sst, MHW_date, climY_start, climY_end, MHW_window):
 
     """
-
     Compute mean SST value pixel by pixel within the window period during climatology range. 
 
     Parameters
@@ -15,9 +13,8 @@ def climgMean(ds_sst, MHW_date, climY_start, climY_end, MHW_window):
 
     Returns
     -------
-    xarray.DataArray ???
+    xarray.DataArray
         Mean SST value pixel by pixel within the window period during climatology range.
-        
     """
     
     return stackRanges(ds_sst, MHW_date, climY_start, climY_end, MHW_window).mean(dim="time")
@@ -25,8 +22,7 @@ def climgMean(ds_sst, MHW_date, climY_start, climY_end, MHW_window):
 def climgThresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window, percentile):
 
     """
-
-    Compute n percentile SST value pixel by pixel within the window period during climatology range. 
+    Compute p percentile SST value pixel by pixel within the window period during climatology range. 
 
     Parameters
     ----------
@@ -34,9 +30,8 @@ def climgThresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window, percentile
 
     Returns
     -------
-    xarray.DataArray ???
-        n percentile SST value pixel by pixel within the window period during climatology range.
-        
+    xarray.DataArray
+        p percentile SST value pixel by pixel within the window period during climatology range.
     """
     
     return stackRanges(ds_sst, MHW_date, climY_start, climY_end, MHW_window).quantile(percentile, dim="time")
@@ -44,8 +39,7 @@ def climgThresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window, percentile
 def climgDiff(ds_sst, MHW_date, climY_start, climY_end, MHW_window, percentile):
 
     """
-
-    Compute the difference between the n percentile and mean SST value pixel by pixel within the window 
+    Compute the difference between the p percentile and mean SST value pixel by pixel within the window 
     period during climatology range. 
 
     Parameters
@@ -54,12 +48,12 @@ def climgDiff(ds_sst, MHW_date, climY_start, climY_end, MHW_window, percentile):
 
     Returns
     -------
-    xarray.DataArray ???
-        Difference between the n percentile and mean SST value pixel by pixel within the window 
+    xarray.DataArray
+        Difference between the p percentile and mean SST value pixel by pixel within the window 
     period during climatology range
-        
     """
 
+    # Compute mean and MHW threshold values for the climatology period
     mean = climgMean(ds_sst, MHW_date, climY_start, climY_end, MHW_window)
     thresh = climgThresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window, percentile)
 

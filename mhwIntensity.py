@@ -1,41 +1,31 @@
+# IMPORT LIBRARIES AND MODULES
 import xarray as xr
 import numpy as np
 from mhwStatistics import climgThresh, climgDiff
 
-
+# DEFINE FUNCTIONS
 def intensityCont(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh, mask):
+
     """
     Compute the anomaly between MHW peak intensity and climatology threshold.
 
     Parameters
     ----------
-    ds_sst : xarray.DataArray
-        SST dataset.
-    MHW_date : str
-        MHW peak intensity date in "YYYY-MM-DD" format.
-    climY_start : int
-        Start year for climatology period.
-    climY_end : int
-        End year for climatology period.
-    MHW_window : int, optional
-        Number of days to add/subtract from MHW peak intensity date (default is 5).
-    thresh : float, optional
-        Percentile threshold for climatology (default is 90).
-    mask : bool, optional
-        Whether to mask negative anomalies (default is True).
+    NOTE: See parameters description in mhwMap.py module
+
     Returns
     -------
     xarray.DataArray
         Anomaly between MHW peak intensity and climatology threshold.
     """
 
-    # Get peak intensity MHW scene
+    # Get peak intensity MHW data
     sst_MHWDate = ds_sst.sel(time = MHW_date)
 
     # Get sst threshold within the climatology period (predefinded: 90th percentile)
     sst_thresh = climgThresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh)
 
-    # Get continuous intensity anomaly at MHW date 
+    # Get continuous intensity value at the MHW date 
     intCont_MHWDate = sst_MHWDate - sst_thresh
 
     # Mask negative values
@@ -46,42 +36,33 @@ def intensityCont(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh, 
     return intCont_MHWDate
 
 def intensityCat(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh, mask):
+    
     """
     Compute the anomaly between MHW peak intensity and climatology threshold.
 
     Parameters
     ----------
-    ds_sst : xarray.DataArray
-        SST dataset.
-    MHW_date : str
-        MHW peak intensity date in "YYYY-MM-DD" format.
-    climY_start : int
-        Start year for climatology period.
-    climY_end : int
-        End year for climatology period.
-    MHW_window : int, optional
-        Number of days to add/subtract from MHW peak intensity date (default is 5).
-    thresh : float, optional
-        Percentile threshold for climatology (default is 90).
-    mask : bool, optional
-        Whether to mask negative anomalies (default is True).
+    NOTE: See parameters description in mhwMap.py module
+
     Returns
     -------
     xarray.DataArray
         Anomaly between MHW peak intensity and climatology threshold.
     """
 
-    # Get peak intensity MHW scene
+    # Get peak intensity MHW data
     intCont_MHWDate = intensityCont(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh, mask)
 
-    #
+    # Get sst climatology difference between the threshold and the climatology mean
     sst_climgDiff = climgDiff(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh)
 
-    ratio = intCont_MHWDate / sst_climgDiff ## Set the ratio intensity/(thresh-clim)
+    # Compute the intensity/(thresh-clim) ratio
+    ratio = intCont_MHWDate / sst_climgDiff
     
-    intCat_MHWDate = xr.full_like(ratio, fill_value = np.nan) ## Initialize the categorical dataset with nan values
+    # Initialize the categorical dataset with nan values
+    intCat_MHWDate = xr.full_like(ratio, fill_value = np.nan) 
     
-    ## fill with categorical data
+    # Fill with the category value according to the range
     intCat_MHWDate = xr.where(ratio > 3, 4, intCat_MHWDate)
     intCat_MHWDate = xr.where((ratio > 2) & (ratio <= 3), 3, intCat_MHWDate)
     intCat_MHWDate = xr.where((ratio > 1) & (ratio <= 2), 2, intCat_MHWDate)

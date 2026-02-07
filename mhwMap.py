@@ -33,7 +33,9 @@ References
     Hobday, A. J. et al. (2016). A hierarchical approach to defining marine heatwaves. Progress in
 Oceanography, 141, 227–238. https://doi.org/10.1016/j.pocean.2015.12.014
     Hobday, A.J. et al. (2018). Categorizing and naming marine heatwaves. Oceanography
-31(2):162–173, https://doi.org/10.5670/oceanog.2018.205.
+31(2):162–173, https://doi.org/10.5670/oceanog.2018.205
+    Huang, B. et al. (2021). Improvements of the Daily Optimum Interpolation Sea Surface Temperature 
+(DOISST) Version 2.1. Journal of Climate, 34(8), 2923-2939. https://doi.org/10.1175/JCLI-D-20-0166.1
 
 """
 
@@ -63,7 +65,7 @@ def mapIntensityCont(sst_path, MHW_date, climY_start = CLIMG_YSTART, climY_end =
 
     Returns
     -------
-    xarray.DataArray ???
+    xarray.DataArray
         Continuous intensity anomaly map for the MHW event.
         
     """
@@ -94,7 +96,7 @@ def mapIntensityCat(sst_path, MHW_date, climY_start = CLIMG_YSTART, climY_end = 
 
     Returns
     -------
-    xarray.DataArray ????
+    xarray.DataArray
         Categorized intensity map for the MHW event.
     """
 
