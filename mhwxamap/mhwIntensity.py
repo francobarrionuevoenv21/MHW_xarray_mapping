@@ -1,7 +1,7 @@
 # IMPORT LIBRARIES AND MODULES
 import xarray as xr
 import numpy as np
-from mhwStatistics import climgThresh, climgDiff
+from .mhwStatistics import climgThresh, climgDiff
 
 # DEFINE FUNCTIONS
 def intensityCont(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh, mask):
