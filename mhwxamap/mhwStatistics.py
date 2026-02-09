@@ -1,5 +1,5 @@
 # IMPORT MODULES
-from mhwAux import stackRanges
+from .mhwAux import stackRanges
 
 # DEFINE FUNCTIONS
 def climgMean(ds_sst, MHW_date, climY_start, climY_end, MHW_window):
