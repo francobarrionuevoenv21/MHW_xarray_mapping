@@ -40,8 +40,8 @@ Oceanography, 141, 227–238. https://doi.org/10.1016/j.pocean.2015.12.014
 """
 
 # IMPORT MODULES
-from mhwAux import openSST
-from mhwIntensity import intensityCont, intensityCat
+from .mhwAux import openSST
+from .mhwIntensity import intensityCont, intensityCat
 
 # DEFINE DEFAULT PARAMETERS VALUES (ACCORDING TO HOBDAY ET AL., 2016)
 CLIMG_YSTART = 1983
