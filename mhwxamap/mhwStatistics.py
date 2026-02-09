@@ -1,4 +1,5 @@
-# IMPORT MODULES
+# IMPORT LIBRARIES AND MODULES
+import warnings
 from .mhwAux import stackRanges
 
 # DEFINE FUNCTIONS
@@ -16,8 +17,18 @@ def climgMean(ds_sst, MHW_date, climY_start, climY_end, MHW_window):
     xarray.DataArray
         Mean SST value pixel by pixel within the window period during climatology range.
     """
-    
-    return stackRanges(ds_sst, MHW_date, climY_start, climY_end, MHW_window).mean(dim="time")
+
+    # Get stacked data within the climatology time period
+    dataStk = stackRanges(ds_sst, MHW_date, climY_start, climY_end, MHW_window)
+
+    # Handle warning before computing
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message="All-NaN slice encountered",
+            category=RuntimeWarning,
+        )
+        return dataStk.mean(dim="time")
 
 def climgThresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window, percentile):
 
@@ -33,8 +44,18 @@ def climgThresh(ds_sst, MHW_date, climY_start, climY_end, MHW_window, percentile
     xarray.DataArray
         p percentile SST value pixel by pixel within the window period during climatology range.
     """
-    
-    return stackRanges(ds_sst, MHW_date, climY_start, climY_end, MHW_window).quantile(percentile, dim="time")
+
+    # Get stacked data within the climatology time period
+    dataStk = stackRanges(ds_sst, MHW_date, climY_start, climY_end, MHW_window)
+
+    # Handle warning before computing
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message="All-NaN slice encountered",
+            category=RuntimeWarning,
+        )
+        return dataStk.quantile(percentile, dim="time")
 
 def climgDiff(ds_sst, MHW_date, climY_start, climY_end, MHW_window, percentile):
 
