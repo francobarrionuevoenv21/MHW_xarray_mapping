@@ -33,7 +33,8 @@ def intensityCont(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh, 
     if mask == True:
         intCont_MHWDate = intCont_MHWDate.where(intCont_MHWDate > 0)
 
-    return intCont_MHWDate
+    return intCont_MHWDate.rename("int_cont")\
+        .assign_attrs(long_name="Intensity")
 
 def intensityCat(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh, mask):
     
@@ -68,4 +69,5 @@ def intensityCat(ds_sst, MHW_date, climY_start, climY_end, MHW_window, thresh, m
     intCat_MHWDate = xr.where((ratio > 1) & (ratio <= 2), 2, intCat_MHWDate)
     intCat_MHWDate = xr.where((ratio > 0) & (ratio <= 1), 1, intCat_MHWDate)
     
-    return intCat_MHWDate
+    return intCat_MHWDate.rename("int_catg")\
+        .assign_attrs(long_name="Intensity category")
