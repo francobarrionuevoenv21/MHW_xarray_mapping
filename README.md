@@ -1,58 +1,44 @@
-# MHW XArray Mapping
+# MHW XArray Mapping 🌡️🌊🗺️
 ### Marine Heatwave Mapping with Xarray
 
-A Python toolkit for mapping and analyzing **Marine Heatwaves (MHWs)** using gridded Sea Surface Temperature (SST) datasets and xarray.
-This repository provides tools to compute ocean warm intensity continously or categorized during a MHW and map it according to the methodology defined by [Hobday et al. (2016)](https://www.sciencedirect.com/science/article/abs/pii/S0079661116000057
+A Python toolkit for mapping and analyzing **Marine Heatwaves (MHWs)** using gridded Sea Surface Temperature (SST) datasets and XArray.
+This repository provides tools to compute ocean warm intensity continously or categorized during a MHW and map it according to the methodology defined by Hobday et al. (2016).
 
 ---
 
-## 📖 Scientific Background
+## Marine Heatwaves
 
-Marine Heatwaves (MHWs) are prolonged periods of anomalously warm ocean temperatures that can significantly impact marine ecosystems.
-
-MHW detection typically follows the framework described by:
-
-> Hobday et al. (2016) — A hierarchical approach to defining marine heatwaves.
-
-This repository focuses on the **mapping and spatial analysis stage** once MHW dates or event windows are identified.
+According to Hobday et al. (2016), a MHW is defined as a  “prolonged discrete anomalously warm water event that can be described by its duration, intensity, rate of evolution, and spatial extent”. These events are relevant because of the variety of impacts that have been associated with, including shifts in species ranges and local extinctions, and economic impacts on aquaculture and seafood industries through declines in important fishery species.
 
 ---
 
-## 🔄 Recommended Workflow
+## Recommended Workflow
 
 To use this tool effectively, follow these steps:
 
-### 1️⃣ Obtain Sea Surface Temperature Data
+### 1. Obtain Sea Surface Temperature Data
 
-Download gridded SST data from a reliable source, such as:
-
-- NOAA OISST  
-- ERA5 reanalysis  
-- CMEMS products  
-- Other NetCDF SST datasets  
+Download gridded SST data from a reliable source with a daily temporal resolution. One of the most used products for this case is the OISST (Huang et al., 2021). Data con be downloaded from [here](https://www.ncei.noaa.gov/products/optimum-interpolation-sst)
 
 Ensure the dataset:
-- Is in NetCDF format  
-- Contains a time dimension  
+- Has, at least, 30 years of data 
+- Is in NetCDF or any other XArray supported format   
 - Uses consistent spatial coordinates (lat/lon)  
 
 ---
 
-### 2️⃣ Detect Marine Heatwave Events
+### Detect Marine Heatwave Events
 
-Detect MHW events using an established detection tool such as:
-
-- The original Hobday et al. MATLAB implementation  
-- A Python implementation of the Hobday framework  
-- Your own MHW detection pipeline  
+Detect MHW events for your study region using any of the available implementations of the Hobday et al. (2016) methodology. You can try with [Python implementation created by Eric C. J. Oliver] (https://github.com/ecjoliver/marineHeatWaves) or build your own one. 
 
 This step should provide:
 - Event start and end dates  
 - Event peak date  
-- Event duration  
-- Threshold percentile  
 
 ---
+
+This repository provides tools to compute ocean warm intensity continously or categorized during a MHW and map it according to the methodology defined by [Hobday et al. (2016)](https://www.sciencedirect.com/science/article/abs/pii/S0079661116000057)
+
 
 ### 3️⃣ Clone This Repository
 
