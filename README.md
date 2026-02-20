@@ -28,13 +28,13 @@ To use this tool effectively, follow these steps:
 Download gridded SST data from a reliable source with a daily temporal resolution. One of the most used products for this case is the OISST (Huang et al., 2021). Data con be downloaded from [here](https://www.ncei.noaa.gov/products/optimum-interpolation-sst)
 
 Ensure the dataset:
-- Has, at least, 30 years of data 
+- Has, at least, 30 years of daily data 
 - Is in NetCDF or any other XArray supported format   
 - Uses consistent spatial coordinates (lat/lon)  
 
 ### 2. Detect Marine Heatwave Events
 
-Detect MHW events for your study region using any of the available implementations of the Hobday et al. (2016) methodology. You can try with [Python implementation created by Eric C. J. Oliver] (https://github.com/ecjoliver/marineHeatWaves) or build your own one. 
+Detect MHW events for your study region using any of the available implementations of the Hobday et al. (2016) methodology. You can try with [Python implementation created by Eric C. J. Oliver](https://github.com/ecjoliver/marineHeatWaves) or build your own one. 
 
 This step should provide:
 - Event start and end dates  
